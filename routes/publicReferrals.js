@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
-const Referral = require("../models/Referral");
+const StudentSubmission = require("../models/StudentSubmission");
 
 // PUBLIC ROUTE - Student Form Submission (No Auth Required)
 router.post("/", async (req, res) => {
@@ -18,32 +17,24 @@ router.post("/", async (req, res) => {
       });
     }
 
-    // Create new referral from student submission
-    // Using default values for required fields - counselor will update these
-    const newReferral = new Referral({
+    // Create new student submission
+    const newSubmission = new StudentSubmission({
       studentName: studentName || 'Anonymous',
-      studentId: 'PENDING',
-      level: 'JHS', // Default value - counselor must update
-      grade: 'TBD', // Default value - counselor must update
-      referralDate: new Date(),
-      reason: concern,
-      description: concern,
-      severity: 'Medium',
+      concern: concern.trim(),
+      nameOption: nameOption || 'preferNot',
       status: 'Pending',
-      studentNameOption: nameOption || 'preferNot',
-      createdBy: new mongoose.Types.ObjectId('000000000000000000000000'), // System placeholder
-      referredBy: 'Student Self-Report'
+      severity: 'Low' // Default - counselor can update after review
     });
 
-    const savedReferral = await newReferral.save();
+    const savedSubmission = await newSubmission.save();
     
-    console.log("✅ Student concern submitted:", savedReferral.referralId);
+    console.log("✅ Student concern submitted:", savedSubmission.submissionId);
     
     res.status(201).json({
       success: true,
       message: 'Concern submitted successfully',
       data: {
-        submissionId: savedReferral.referralId
+        submissionId: savedSubmission.submissionId
       }
     });
 
@@ -52,10 +43,9 @@ router.post("/", async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Server error. Please try again later.',
-      details: error.message // Added for debugging
+      details: error.message
     });
   }
 });
-
 
 module.exports = router;
