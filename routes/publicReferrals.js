@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
       success: true,
       message: 'Concern submitted successfully',
       data: {
-        referralId: savedReferral.referralId
+        submissionId: savedReferral.referralId
       }
     });
 
@@ -56,5 +56,6 @@ router.post("/", async (req, res) => {
     });
   }
 });
+
 
 module.exports = router;
