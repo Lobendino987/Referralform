@@ -1,5 +1,5 @@
-// Student_Form.js - FIXED FOR API CLIENT CONSISTENCY
-// Now properly uses apiClient for submissions
+// Student_Form.js - FIXED FOR CORRECT API ENDPOINT
+// Now uses /api/student-submissions/submit
 
 // Proceed from Instructions to Form
 document.getElementById('proceedBtn').addEventListener('click', () => {
@@ -100,55 +100,22 @@ document.getElementById('complaintForm').addEventListener('submit', async (e) =>
 
     console.log("📝 Submitting Student Concern:", formData);
       
-    // ✅ FIXED: Use apiClient if available, otherwise direct fetch
-    let response;
+    // ✅ FIXED: Use correct endpoint /api/student-submissions/submit
+    const fetchResponse = await fetch('http://localhost:3000/api/student-submissions/submit', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    });
     
-    if (typeof apiClient !== 'undefined' && apiClient.submitStudentConcern) {
-      // Use API client (preferred method)
-      console.log("✅ Using apiClient.submitStudentConcern()");
-      response = await apiClient.submitStudentConcern(formData);
-    } else {
-      // Fallback to direct fetch for public form
-      console.log("⚠️ apiClient not available, using direct fetch");
-      const fetchResponse = await fetch('http://localhost:3000/api/public-referrals', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-      
-      const data = await fetchResponse.json();
-      
-      // Normalize response format to match apiClient
-      if (!fetchResponse.ok) {
-        response = {
-          success: false,
-          error: data.error || data.message || 'Failed to submit concern',
-          message: data.error || data.message || 'Failed to submit concern'
-        };
-      } else {
-        response = {
-          success: true,
-          data: data.data || data,
-          submissionId: data.submissionId || data.data?.submissionId,
-          message: data.message || 'Success'
-        };
-      }
-    }
-
-    console.log("📥 Server Response:", response);
-    console.log("🔍 Checking response.data:", response.data);
-console.log("🔍 Checking response.data.submissionId:", response.data?.submissionId);
+    const data = await fetchResponse.json();
     
+    console.log("📥 Server Response:", data);
 
-    if (response.success) {
-      // Extract submission ID from various possible response formats
-      const submissionId = 
-        response.data?.submissionId || 
-        response.submissionId || 
-        response.data?.submission?.submissionId ||
-        'N/A';
+    if (fetchResponse.ok && data.success) {
+      // Extract submission ID
+      const submissionId = data.data?.submissionId || 'N/A';
       
       console.log("✅ Submission successful! ID:", submissionId);
       
@@ -159,7 +126,7 @@ console.log("🔍 Checking response.data.submissionId:", response.data?.submissi
       document.getElementById('nameInputGroup').style.display = 'none';
     } else {
       // Show error message
-      const errorMessage = response.error || response.message || 'Failed to submit concern. Please try again.';
+      const errorMessage = data.error || data.message || 'Failed to submit concern. Please try again.';
       console.error('❌ Submission failed:', errorMessage);
       showError(errorMessage);
       submitBtn.textContent = originalText;
@@ -261,12 +228,5 @@ document.head.appendChild(style);
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   console.log("✅ Student Form initialized");
-  
-  // Check if apiClient is available
-  if (typeof apiClient !== 'undefined') {
-    console.log("✅ apiClient is available");
-  } else {
-    console.warn("⚠️ apiClient not available - will use direct fetch fallback");
-  }
-
+  console.log("📍 Using endpoint: /api/student-submissions/submit");
 });
