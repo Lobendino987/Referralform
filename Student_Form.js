@@ -1,5 +1,5 @@
-// Student_Form.js - FIXED FOR CORRECT API ENDPOINT
-// Now uses /api/student-submissions/submit
+// Student_Form.js - PRODUCTION READY
+// Uses deployed backend on Render
 
 // Proceed from Instructions to Form
 document.getElementById('proceedBtn').addEventListener('click', () => {
@@ -100,8 +100,8 @@ document.getElementById('complaintForm').addEventListener('submit', async (e) =>
 
     console.log("📝 Submitting Student Concern:", formData);
       
-    // ✅ FIXED: Use correct endpoint /api/student-submissions/submit
-    const fetchResponse = await fetch('http://localhost:3000/api/student-submissions/submit', {
+    // ✅ Production: Use Render backend URL
+    const fetchResponse = await fetch('https://referralform.onrender.com/api/student-submissions/submit', {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json'
@@ -143,7 +143,7 @@ document.getElementById('complaintForm').addEventListener('submit', async (e) =>
     }
     
     if (error.name === 'TypeError' && error.message.includes('fetch')) {
-      errorMessage = 'Cannot connect to server. Please make sure the server is running on http://localhost:3000';
+      errorMessage = 'Cannot connect to server. Please try again later. (Note: Server may take 30-50 seconds to wake up if inactive)';
     }
     
     showError(errorMessage);
@@ -228,5 +228,5 @@ document.head.appendChild(style);
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   console.log("✅ Student Form initialized");
-  console.log("📍 Using endpoint: /api/student-submissions/submit");
+  console.log("📍 Using endpoint: https://referralform.onrender.com/api/student-submissions/submit");
 });
