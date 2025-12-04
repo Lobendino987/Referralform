@@ -138,6 +138,8 @@ document.getElementById('complaintForm').addEventListener('submit', async (e) =>
     }
 
     console.log("📥 Server Response:", response);
+    console.log("🔍 Checking response.data:", response.data);
+console.log("🔍 Checking response.data.submissionId:", response.data?.submissionId);
     
 
     if (response.success) {
@@ -266,4 +268,5 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     console.warn("⚠️ apiClient not available - will use direct fetch fallback");
   }
+
 });
