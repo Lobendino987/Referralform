@@ -22,7 +22,16 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ===== Middleware =====
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'https://lobendino987.github.io'  // Your GitHub Pages domain
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -157,4 +166,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
   console.log(`📂 Serving frontend from: ${path.join(__dirname, '../frontend')}`);
   console.log(`📋 Student form available at: http://localhost:${PORT}/student-form/Student_Form.html`);
+
 });
