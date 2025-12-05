@@ -2,7 +2,7 @@
 // COMPLETE API-CLIENT.JS - With Student Submissions + All Endpoints
 // ============================================
 
-const API_BASE_URL = "http://localhost:3000/api";
+const API_BASE_URL = "https://studentreferralforms.onrender.com/api";
 
 class APIClient {
   constructor() {
@@ -422,4 +422,5 @@ console.log("✅ apiClient loaded. Available methods:", Object.getOwnPropertyNam
 // Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = apiClient;
+
 }
